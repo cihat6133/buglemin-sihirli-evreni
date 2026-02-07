@@ -1,25 +1,70 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-  <meta charset="UTF-8">
-  <title>Buglemin Sihirli Evreni ✨</title>
-  <style>
-    body {
-      background: linear-gradient(135deg, #1e1e2f, #3a1c71);
-      color: #fff;
-      font-family: Arial, sans-serif;
-      text-align: center;
-      padding-top: 100px;
-    }
-    h1 {
-      font-size: 3rem;
-    }
-    p {
-      font-size: 1.2rem;
-      opacity: 0.9;
-    }
-  </style>
+<meta charset="UTF-8">
+<title>Buglemin Sihirli Evreni</title>
+<style>
+body {
+  margin: 0;
+  height: 100vh;
+  background: linear-gradient(135deg, #2b1055, #7597de);
+  color: white;
+  font-family: Arial, sans-serif;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.screen { display: none; }
+.screen.active { display: block; }
+
+h1 { font-size: 3rem; }
+button {
+  font-size: 1.5rem;
+  padding: 15px 30px;
+  margin: 15px;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+}
+
+.yes { background: #4CAF50; color: white; }
+.no { background: #f44336; color: white; }
+.love { background: #ff69b4; color: white; }
+</style>
 </head>
+
 <body>
-  <h1>✨ Buglemin Sihirli Evreni ✨</h1>
-  <p>Hoş 
+
+<div id="screen1" class="screen active">
+  <h1>Seni seviyor muyum?</h1>
+  <button class="yes" onclick="go('screen2')">EVET</button>
+  <button class="no" onclick="go('screen3')">HAYIR</button>
+</div>
+
+<div id="screen2" class="screen">
+  <h1>Beni sevmediğini biliyorum</h1>
+  <button class="love" onclick="go('screen4')">Beni sevmek için tıkla</button>
+</div>
+
+<div id="screen3" class="screen">
+  <h1>Beni sevmediğini biliyorjm</h1>
+  <button class="love" onclick="go('screen4')">Beni sevmek için tıkla</button>
+</div>
+
+<div id="screen4" class="screen">
+  <h1>🐻💃🐻💃🐻</h1>
+  <p>Ayıcıklar dans ediyor 🎶</p>
+  <img src="https://media.giphy.com/media/3oriO0OEd9QIDdllqo/giphy.gif" width="200">
+</div>
+
+<script>
+function go(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+</script>
+
+</body>
+</html>
