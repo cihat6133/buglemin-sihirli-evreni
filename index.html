@@ -1,69 +1,123 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-<meta charset="UTF-8">
-<title>Buglemin Sihirli Evreni</title>
-<style>
-body {
-  margin: 0;
-  height: 100vh;
-  background: linear-gradient(135deg, #2b1055, #7597de);
-  color: white;
-  font-family: Arial, sans-serif;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-}
+  <meta charset="UTF-8">
+  <title>Buglemin Mükemmel Evreni</title>
 
-.screen { display: none; }
-.screen.active { display: block; }
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      background: radial-gradient(circle, #3a1c71, #000);
+      color: white;
+      font-family: Arial, sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      overflow: hidden;
+    }
 
-h1 { font-size: 3rem; }
-button {
-  font-size: 1.5rem;
-  padding: 15px 30px;
-  margin: 15px;
-  border: none;
-  border-radius: 12px;
-  cursor: pointer;
-}
+    .screen { display: none; }
+    .active { display: block; }
 
-.yes { background: #4CAF50; color: white; }
-.no { background: #f44336; color: white; }
-.love { background: #ff69b4; color: white; }
-</style>
+    h1 {
+      font-size: 7rem;
+      letter-spacing: 5px;
+      animation: glow 2s infinite alternate;
+    }
+
+    p {
+      font-size: 3rem;
+      margin: 30px 0;
+    }
+
+    button {
+      font-size: 2.5rem;
+      padding: 25px 50px;
+      margin: 15px;
+      border-radius: 20px;
+      border: none;
+      cursor: pointer;
+      background: white;
+      color: black;
+      font-weight: bold;
+    }
+
+    input {
+      font-size: 2.5rem;
+      padding: 15px;
+      width: 120px;
+      text-align: center;
+    }
+
+    .bears {
+      font-size: 7rem;
+      animation: dance 0.6s infinite alternate;
+    }
+
+    @keyframes dance {
+      from { transform: rotate(-10deg) translateY(0); }
+      to { transform: rotate(10deg) translateY(-30px); }
+    }
+
+    @keyframes glow {
+      from { text-shadow: 0 0 20px violet; }
+      to { text-shadow: 0 0 40px pink; }
+    }
+  </style>
 </head>
-
 <body>
 
-<div id="screen1" class="screen active">
-  <h1>Seni seviyor muyum?</h1>
-  <button class="yes" onclick="go('screen2')">EVET</button>
-  <button class="no" onclick="go('screen3')">HAYIR</button>
+<!-- 1 -->
+<div id="s1" class="screen active">
+  <h1>BUGLEM</h1>
+  <p>Beni seviyor musun?</p>
+  <button onclick="go(2)">EVET</button>
+  <button onclick="go(2)">HAYIR</button>
 </div>
 
-<div id="screen2" class="screen">
-  <h1>Beni sevmediğini biliyorum</h1>
-  <button class="love" onclick="go('screen4')">Beni sevmek için tıkla</button>
+<!-- 2 -->
+<div id="s2" class="screen">
+  <p>Mini bulmaca 💭</p>
+  <p>“Buglem” kaç harf?</p>
+  <input id="answer" type="number">
+  <br><br>
+  <button onclick="check()">Cevapla</button>
 </div>
 
-<div id="screen3" class="screen">
-  <h1>Beni sevmediğini biliyorjm</h1>
-  <button class="love" onclick="go('screen4')">Beni sevmek için tıkla</button>
+<!-- 3 -->
+<div id="s3" class="screen">
+  <div class="bears">🐻💃 🐻🕺 🐻💃 🐻🕺</div>
+  <p>BUGLEM EVRENİNE HOŞ GELDİN</p>
+  <p>(Ekrana tıkla 🚀)</p>
 </div>
 
-<div id="screen4" class="screen">
-  <h1>🐻💃🐻💃🐻</h1>
-  <p>Ayıcıklar dans ediyor 🎶</p>
-  <img src="https://media.giphy.com/media/3oriO0OEd9QIDdllqo/giphy.gif" width="200">
-</div>
+<audio id="music">
+  <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+</audio>
 
 <script>
-function go(id) {
-  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-}
+  function go(n) {
+    document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
+    document.getElementById("s" + n).classList.add("active");
+  }
+
+  function check() {
+    const val = document.getElementById("answer").value;
+    if (val == 6) {
+      go(3);
+      document.getElementById("music").play();
+    } else {
+      alert("Yanlış 😏 Bir daha dene");
+    }
+  }
+
+  document.body.addEventListener("click", () => {
+    if (document.getElementById("s3").classList.contains("active")) {
+      window.location.href = "https://www.youtube.com/watch?v=2Vv-BfVoq4g";
+    }
+  });
 </script>
 
 </body>
