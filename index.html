@@ -1,123 +1,155 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-  <meta charset="UTF-8">
-  <title>Buglemin Mükemmel Evreni</title>
+<meta charset="UTF-8">
+<title>Buglem’in Sihirli Evreni</title>
 
-  <style>
-    body {
-      margin: 0;
-      height: 100vh;
-      background: radial-gradient(circle, #3a1c71, #000);
-      color: white;
-      font-family: Arial, sans-serif;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      overflow: hidden;
-    }
+<style>
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: radial-gradient(circle, #1b2735, #090a0f);
+  color: white;
+  text-align: center;
+}
 
-    .screen { display: none; }
-    .active { display: block; }
+.screen {
+  margin-top: 20vh;
+}
 
-    h1 {
-      font-size: 7rem;
-      letter-spacing: 5px;
-      animation: glow 2s infinite alternate;
-    }
+.hidden { display: none; }
 
-    p {
-      font-size: 3rem;
-      margin: 30px 0;
-    }
+h1 {
+  font-size: 80px;
+  letter-spacing: 8px;
+}
 
-    button {
-      font-size: 2.5rem;
-      padding: 25px 50px;
-      margin: 15px;
-      border-radius: 20px;
-      border: none;
-      cursor: pointer;
-      background: white;
-      color: black;
-      font-weight: bold;
-    }
+button {
+  padding: 15px 30px;
+  font-size: 20px;
+  border-radius: 30px;
+  border: none;
+  background: pink;
+  cursor: pointer;
+}
 
-    input {
-      font-size: 2.5rem;
-      padding: 15px;
-      width: 120px;
-      text-align: center;
-    }
+input {
+  padding: 10px;
+  font-size: 18px;
+  margin: 10px;
+}
 
-    .bears {
-      font-size: 7rem;
-      animation: dance 0.6s infinite alternate;
-    }
+#heart {
+  font-size: 90px;
+  cursor: pointer;
+  animation: float 1s infinite alternate;
+}
 
-    @keyframes dance {
-      from { transform: rotate(-10deg) translateY(0); }
-      to { transform: rotate(10deg) translateY(-30px); }
-    }
+@keyframes float {
+  from { transform: translateY(0); }
+  to { transform: translateY(-20px); }
+}
 
-    @keyframes glow {
-      from { text-shadow: 0 0 20px violet; }
-      to { text-shadow: 0 0 40px pink; }
-    }
-  </style>
+.cards {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+
+.card {
+  font-size: 50px;
+  width: 100px;
+  height: 100px;
+  background: #222;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+</style>
 </head>
+
 <body>
 
-<!-- 1 -->
-<div id="s1" class="screen active">
+<div id="intro" class="screen">
   <h1>BUGLEM</h1>
-  <p>Beni seviyor musun?</p>
-  <button onclick="go(2)">EVET</button>
-  <button onclick="go(2)">HAYIR</button>
+  <p>Sihirli Evrene Hoş Geldun ✨</p>
+  <button onclick="startGame()">Evrene Gir 💖</button>
 </div>
 
-<!-- 2 -->
-<div id="s2" class="screen">
-  <p>Mini bulmaca 💭</p>
-  <p>“Buglem” kaç harf?</p>
-  <input id="answer" type="number">
-  <br><br>
-  <button onclick="check()">Cevapla</button>
+<div id="game1" class="screen hidden">
+  <h2>🧩 Bulmaca</h2>
+  <p>BUGLEM kaç harf?</p>
+  <input id="answer" placeholder="Cevap yaz">
+  <br>
+  <button onclick="checkAnswer()">Kontrol Et</button>
 </div>
 
-<!-- 3 -->
-<div id="s3" class="screen">
-  <div class="bears">🐻💃 🐻🕺 🐻💃 🐻🕺</div>
-  <p>BUGLEM EVRENİNE HOŞ GELDİN</p>
-  <p>(Ekrana tıkla 🚀)</p>
+<div id="game2" class="screen hidden">
+  <h2>💖 Kalbi Yakala</h2>
+  <p>Kalbe 5 kere tıkla</p>
+  <div id="heart" onclick="hitHeart()">💗</div>
 </div>
 
-<audio id="music">
-  <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
-</audio>
+<div id="game3" class="screen hidden">
+  <h2>🧠 Hafıza Oyunu</h2>
+  <p>Yıldızı bul ⭐</p>
+  <div class="cards">
+    <div class="card" onclick="pick(0)">❓</div>
+    <div class="card" onclick="pick(1)">❓</div>
+    <div class="card" onclick="pick(2)">❓</div>
+  </div>
+</div>
+
+<div id="final" class="screen hidden">
+  <h1>🌌 Buglem Evreni Tamamlandı</h1>
+  <p>Ekrana tıkla 🚀</p>
+</div>
 
 <script>
-  function go(n) {
-    document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
-    document.getElementById("s" + n).classList.add("active");
-  }
+let heartCount = 0;
+let starIndex = Math.floor(Math.random() * 3);
 
-  function check() {
-    const val = document.getElementById("answer").value;
-    if (val == 6) {
-      go(3);
-      document.getElementById("music").play();
-    } else {
-      alert("Yanlış 😏 Bir daha dene");
-    }
-  }
+function show(id) {
+  document.querySelectorAll(".screen")
+    .forEach(s => s.classList.add("hidden"));
+  document.getElementById(id).classList.remove("hidden");
+}
 
-  document.body.addEventListener("click", () => {
-    if (document.getElementById("s3").classList.contains("active")) {
-      window.location.href = "https://www.youtube.com/watch?v=2Vv-BfVoq4g";
-    }
-  });
+function startGame() {
+  show("game1");
+}
+
+function checkAnswer() {
+  const val = document.getElementById("answer").value;
+  if (val == 6) {
+    show("game2");
+  } else {
+    alert("Az daha ha 😄");
+  }
+}
+
+function hitHeart() {
+  heartCount++;
+  if (heartCount >= 5) {
+    show("game3");
+  }
+}
+
+function pick(i) {
+  const cards = document.querySelectorAll(".card");
+  if (i === starIndex) {
+    cards[i].innerText = "⭐";
+    setTimeout(() => show("final"), 800);
+  } else {
+    cards[i].innerText = "❌";
+  }
+}
+
+document.getElementById("final").onclick = () => {
+  window.location.href =
+    "https://www.youtube.com/results?search_query=Bikinisinde+Astronomi";
+};
 </script>
 
 </body>
