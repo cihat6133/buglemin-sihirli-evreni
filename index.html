@@ -2,154 +2,130 @@
 <html lang="tr">
 <head>
 <meta charset="UTF-8">
-<title>Buglem’in Sihirli Evreni</title>
+<title>Buglem & Cihat Evreni</title>
 
 <style>
-body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-  background: radial-gradient(circle, #1b2735, #090a0f);
-  color: white;
-  text-align: center;
+body{
+  margin:0;
+  background:radial-gradient(circle,#1b2735,#090a0f);
+  color:white;
+  font-family:Arial, sans-serif;
+  text-align:center;
 }
-
-.screen {
-  margin-top: 20vh;
+.screen{margin-top:15vh;}
+.hidden{display:none;}
+h1{font-size:70px;letter-spacing:6px;}
+h2{font-size:40px;}
+button{
+  padding:15px 35px;
+  font-size:20px;
+  border:none;
+  border-radius:30px;
+  background:pink;
+  cursor:pointer;
 }
-
-.hidden { display: none; }
-
-h1 {
-  font-size: 80px;
-  letter-spacing: 8px;
+input{
+  padding:12px;
+  font-size:18px;
+  border-radius:10px;
+  border:none;
+  margin:10px;
 }
-
-button {
-  padding: 15px 30px;
-  font-size: 20px;
-  border-radius: 30px;
-  border: none;
-  background: pink;
-  cursor: pointer;
-}
-
-input {
-  padding: 10px;
-  font-size: 18px;
-  margin: 10px;
-}
-
-#heart {
-  font-size: 90px;
-  cursor: pointer;
-  animation: float 1s infinite alternate;
-}
-
-@keyframes float {
-  from { transform: translateY(0); }
-  to { transform: translateY(-20px); }
-}
-
-.cards {
-  display: flex;
-  justify-content: center;
-  gap: 20px;
-}
-
-.card {
-  font-size: 50px;
-  width: 100px;
-  height: 100px;
-  background: #222;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
-}
+#heart{font-size:90px;cursor:pointer;animation:float 1s infinite alternate;}
+@keyframes float{from{transform:translateY(0)}to{transform:translateY(-25px)}}
+.progress{margin-top:20px;opacity:.7}
 </style>
 </head>
 
 <body>
 
 <div id="intro" class="screen">
-  <h1>BUGLEM</h1>
-  <p>Sihirli Evrene Hoş Geldun ✨</p>
-  <button onclick="startGame()">Evrene Gir 💖</button>
+  <h1>BUGLEM ❤️ CİHAT</h1>
+  <p>Mesafeler uzak olabilir ama bu evren sonsuz ✨</p>
+  <button onclick="next()">Evrene Gir 💫</button>
 </div>
 
-<div id="game1" class="screen hidden">
-  <h2>🧩 Bulmaca</h2>
-  <p>BUGLEM kaç harf?</p>
-  <input id="answer" placeholder="Cevap yaz">
+<div id="game" class="screen hidden">
+  <h2 id="title"></h2>
+  <p id="question"></p>
+  <input id="answer" placeholder="Cevabını yaz">
   <br>
-  <button onclick="checkAnswer()">Kontrol Et</button>
+  <button onclick="check()">Devam Et</button>
+  <div class="progress" id="progress"></div>
 </div>
 
-<div id="game2" class="screen hidden">
-  <h2>💖 Kalbi Yakala</h2>
-  <p>Kalbe 5 kere tıkla</p>
-  <div id="heart" onclick="hitHeart()">💗</div>
-</div>
-
-<div id="game3" class="screen hidden">
-  <h2>🧠 Hafıza Oyunu</h2>
-  <p>Yıldızı bul ⭐</p>
-  <div class="cards">
-    <div class="card" onclick="pick(0)">❓</div>
-    <div class="card" onclick="pick(1)">❓</div>
-    <div class="card" onclick="pick(2)">❓</div>
-  </div>
+<div id="tapGame" class="screen hidden">
+  <h2>💖 Sevgi Enerjisi Topla</h2>
+  <p>Kalbe 7 kere tıkla</p>
+  <div id="heart" onclick="tap()">💗</div>
 </div>
 
 <div id="final" class="screen hidden">
-  <h1>🌌 Buglem Evreni Tamamlandı</h1>
-  <p>Ekrana tıkla 🚀</p>
+  <h1>🌌 EVREN TAMAMLANDI</h1>
+  <p>Hazırsan müzik başlıyor…</p>
 </div>
 
 <script>
-let heartCount = 0;
-let starIndex = Math.floor(Math.random() * 3);
+let step=0;
+let taps=0;
 
-function show(id) {
-  document.querySelectorAll(".screen")
-    .forEach(s => s.classList.add("hidden"));
-  document.getElementById(id).classList.remove("hidden");
+const puzzles=[
+ {t:"🧩 Bulmaca",q:"BUGLEM kaç harf?",a:"6"},
+ {t:"🍽️ Soru",q:"Cihat’ın en sevdiği yemek?",a:"hamsi"},
+ {t:"❤️ Kalp",q:"Cihat en çok kimi sever?",a:"buglem"},
+ {t:"🤍 Duygu",q:"Mesafeye rağmen güçlü kalan şey?",a:"sevgi"},
+ {t:"🌍 Mini Oyun",q:"Buglem ile Cihat arasında kaç kalp var? (sonsuz)",a:"sonsuz"},
+ {t:"😌 Eğlence",q:"Bu site eğlenceli mi? (evet yaz 😄)",a:"evet"},
+ {t:"🧠 Bilmece",q:"Gece parlar, gökyüzünde yaşar?",a:"yıldız"},
+ {t:"💫 Son Test",q:"Bu evren kimin için yapıldı?",a:"buglem"}
+];
+
+function show(id){
+ document.querySelectorAll(".screen").forEach(s=>s.classList.add("hidden"));
+ document.getElementById(id).classList.remove("hidden");
 }
 
-function startGame() {
-  show("game1");
+function next(){
+ show("game");
+ load();
 }
 
-function checkAnswer() {
-  const val = document.getElementById("answer").value;
-  if (val == 6) {
-    show("game2");
-  } else {
-    alert("Az daha ha 😄");
-  }
+function load(){
+ document.getElementById("title").innerText=puzzles[step].t;
+ document.getElementById("question").innerText=puzzles[step].q;
+ document.getElementById("answer").value="";
+ document.getElementById("progress").innerText=
+   (step+1)+" / "+puzzles.length+" bulmaca";
 }
 
-function hitHeart() {
-  heartCount++;
-  if (heartCount >= 5) {
-    show("game3");
-  }
+function check(){
+ let val=document.getElementById("answer").value.toLowerCase();
+ if(val===puzzles[step].a){
+   step++;
+   if(step===3){ show("tapGame"); return; }
+   if(step<puzzles.length){ load(); }
+   else{ end(); }
+ }else{
+   alert("Az daha ha 😄 Pes etmek yok");
+ }
 }
 
-function pick(i) {
-  const cards = document.querySelectorAll(".card");
-  if (i === starIndex) {
-    cards[i].innerText = "⭐";
-    setTimeout(() => show("final"), 800);
-  } else {
-    cards[i].innerText = "❌";
-  }
+function tap(){
+ taps++;
+ if(taps>=7){
+   taps=0;
+   show("game");
+   load();
+ }
 }
 
-document.getElementById("final").onclick = () => {
-  window.location.href =
-    "https://www.youtube.com/results?search_query=Bikinisinde+Astronomi";
-};
+function end(){
+ show("final");
+ setTimeout(()=>{
+   window.location.href=
+   "https://www.youtube.com/results?search_query=Bikinisinde+Astronomi";
+ },3000);
+}
 </script>
 
 </body>
